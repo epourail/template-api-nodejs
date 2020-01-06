@@ -1,0 +1,16 @@
+version: '3.7'
+
+services:
+  api-nodejs:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - 8882:80
+    networks:
+      - front
+      - back
+
+networks:
+  front:
+  back:
