@@ -1,0 +1,49 @@
+#
+# "build" stage for prod
+FROM mhart/alpine-node:8 as build_prod
+WORKDIR /build
+
+COPY package.json .
+COPY yarn.lock .
+ONBUILD RUN yarn install --production=true
+
+#
+# "nodejs" stage for prod
+FROM mhart/alpine-node:slim-8 as api_nodejs_prod
+ENV APP_ENV=prod
+
+WORKDIR /app
+COPY --from=build_prod ./build .
+COPY ./src ./src
+COPY ./bin ./bin
+
+COPY docker/nodejs/docker-entrypoint.sh /usr/local/bin/docker-entrypoint
+RUN set -eux; \
+    chmod +x /usr/local/bin/docker-entrypoint
+
+ENTRYPOINT ["docker-entrypoint"]
+
+#
+# "build" stage for dev
+FROM mhart/alpine-node:8 as build_dev
+WORKDIR /build
+
+COPY package.json .
+COPY yarn.lock .
+RUN yarn install
+
+#
+# "nodejs" stage for dev
+FROM mhart/alpine-node:8 as api_nodejs_dev
+ENV APP_ENV=dev
+
+WORKDIR /app
+COPY --from=build_dev ./build .
+COPY ./src ./src
+COPY ./bin ./bin
+
+COPY docker/nodejs/docker-entrypoint.sh /usr/local/bin/docker-entrypoint
+RUN set -eux; \
+    chmod +x /usr/local/bin/docker-entrypoint
+
+ENTRYPOINT ["docker-entrypoint"]

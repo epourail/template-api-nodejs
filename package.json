@@ -1,0 +1,24 @@
+{
+  "name": "template-api-nodejs",
+  "version": "1.0.0",
+  "main": "./src/app.js",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www",
+    "start-dev": "nodemon ./bin/www"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/epourail/template-api-nodejs.git"
+  },
+  "keywords": [],
+  "dependencies": {
+    "express": "~4.16.1",
+    "morgan": "~1.9.1",
+    "nconf": "^0.10.0"
+  },
+  "devDependencies": {
+    "debug": "~2.6.9",
+    "nodemon": "^2.0.2"
+  }
+}
